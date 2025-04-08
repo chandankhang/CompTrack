@@ -1,26 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   Button, Typography, Container, Box, Grid, Card, AppBar, Toolbar, IconButton,
-  CssBaseline, Switch, Fade, Slide, Dialog, DialogTitle, DialogContent, DialogActions,
+  CssBaseline, Switch, Fade, Dialog, DialogTitle, DialogContent, DialogActions,
   TextField, Snackbar, Alert, Select, MenuItem, CircularProgress, Avatar, Tooltip,
   Drawer, List, ListItem, ListItemText, Divider,
 } from '@mui/material';
 import {
   FileCopy, TrackChanges, SupportAgent, Security, Chat, Facebook, Twitter, LinkedIn,
-  Brightness4, Brightness7, PlayArrow, Close, Info, Language, Menu as MenuIcon,
+  Brightness4, Brightness7 , Close, Info,  Menu as MenuIcon
 } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import videoBackground from '../assets/comptrack.mp4'; // Ensure this path is correct
-import logo from '../assets/comptrackLogo.png'; // Ensure this path is correct
+import logo from './assets/comptrackLogo.png'; // Ensure this path is correct
 
 const Home = () => {
   const [darkMode, setDarkMode] = useState(false);
-  const [openWelcome, setOpenWelcome] = useState(true);
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
@@ -29,25 +27,88 @@ const Home = () => {
   const [complaintId, setComplaintId] = useState('');
   const [complaintStatus, setComplaintStatus] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
-  const [videoError, setVideoError] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const videoRef = useRef(null);
   const navigate = useNavigate();
   const trackComplaintRef = useRef(null);
 
   const theme = createTheme({
     palette: {
       mode: darkMode ? 'dark' : 'light',
-      primary: { main: '#00e5ff' },
-      secondary: { main: '#ff6f61' },
-      background: { default: darkMode ? '#1a1a2e' : '#f0faff' },
+      primary: { main: '#4CAF50' }, // Primary color
+      secondary: { main: '#FF9800' }, // Secondary color
+      background: { default: darkMode ? '#121212' : '#FAFAFA' },
     },
-    typography: { fontFamily: "'Montserrat', sans-serif" },
+    typography: { fontFamily: "'Poppins', sans-serif" },
     components: {
-      MuiButton: { styleOverrides: { root: { borderRadius: 30, textTransform: 'none', padding: '14px 28px', boxShadow: '0 6px 20px rgba(0,0,0,0.15)', transition: 'all 0.3s' } } },
-      MuiCard: { styleOverrides: { root: { borderRadius: 20, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', transition: 'transform 0.4s ease, box-shadow 0.4s ease' } } },
-      MuiAppBar: { styleOverrides: { root: { boxShadow: '0 6px 25px rgba(0,0,0,0.2)', backdropFilter: 'blur(12px)' } } },
-      MuiDialog: { styleOverrides: { paper: { borderRadius: 16, boxShadow: '0 10px 50px rgba(0,0,0,0.25)' } } },
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 30,
+            textTransform: 'none',
+            padding: '14px 28px',
+            boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'scale(1.1)', // Slight zoom-in effect
+              boxShadow: '0 12px 30px rgba(0,0,0,0.25)', // Enhanced shadow
+            },
+          },
+          containedPrimary: {
+            backgroundColor: '#4CAF50', // Button color
+            '&:hover': {
+              backgroundColor: '#388E3C', // Hover color
+              boxShadow: '0 8px 20px rgba(56, 142, 60, 0.5)', // Green glow
+            },
+          },
+          outlinedPrimary: {
+            borderColor: '#4CAF50',
+            color: '#4CAF50',
+            '&:hover': {
+              borderColor: '#388E3C',
+              color: '#388E3C',
+              backgroundColor: 'rgba(56, 142, 60, 0.1)', // Light green background on hover
+            },
+          },
+          containedSecondary: {
+            backgroundColor: '#FF9800', // Secondary button color
+            '&:hover': {
+              backgroundColor: '#F57C00', // Hover color
+              boxShadow: '0 8px 20px rgba(245, 124, 0, 0.5)', // Orange glow
+            },
+          },
+        },
+      },
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            borderRadius: 20,
+            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+            transition: 'transform 0.4s ease, box-shadow 0.4s ease',
+            '&:hover': {
+              transform: 'scale(1.05)', // Slight zoom-in effect
+              boxShadow: '0 15px 40px rgba(76, 175, 80, 0.5)', // Green glow
+            },
+          },
+        },
+      },
+      MuiAppBar: {
+        styleOverrides: {
+          root: {
+            boxShadow: '0 6px 25px rgba(0,0,0,0.2)',
+            backdropFilter: 'blur(10px)', // Modern blur effect
+            backgroundColor: darkMode ? 'rgba(18, 18, 18, 0.9)' : 'rgba(255, 255, 255, 0.9)', // Transparent app bar
+          },
+        },
+      },
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            borderRadius: 16,
+            boxShadow: '0 10px 50px rgba(0,0,0,0.25)',
+            backgroundColor: darkMode ? '#1E1E1E' : '#FFFFFF', // Modern dialog background
+          },
+        },
+      },
     },
   });
 
@@ -172,15 +233,7 @@ const Home = () => {
     },
   };
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.play().catch((error) => {
-        console.error('Video playback failed:', error);
-        setVideoError(true);
-      });
-    }
-  }, []);
+  
 
   const handleChatSubmit = async () => {
     if (!chatMessage.trim()) {
@@ -227,38 +280,141 @@ const Home = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ minHeight: '100vh', overflowX: 'hidden', background: darkMode ? '#1a1a2e' : '#f0faff' }}>
-        <AppBar position="fixed" sx={{ bgcolor: 'rgba(26, 26, 46, 0.95)' }}>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          overflowX: 'hidden',
+          background: darkMode
+            ? 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)' // Modern dark gradient
+            : 'linear-gradient(135deg, #e0f7fa, #ffffff)', // Light gradient
+        }}
+      >
+        <AppBar
+          position = "fixed"
+          sx={{
+            bgcolor: darkMode ? 'rgba(15, 32, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)', // Transparent app bar
+            boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
+            backdropFilter: 'blur(10px)', // Modern blur effect
+          }}
+        >
           <Toolbar sx={{ justifyContent: 'space-between', py: 1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <img src={logo} alt="CompTrack Logo" style={{ height: 55, marginRight: 15 }} />
-              <Typography variant="h5" component={Link} to="/" sx={{ color: '#00e5ff', textDecoration: 'none', fontWeight: 700, letterSpacing: 1 }}>
+              <Typography
+                variant="h5"
+                component={Link}
+                to="/"
+                sx={{
+                  color: darkMode ? '#81C784' : '#4CAF50',
+                  textDecoration: 'none',
+                  fontWeight: 700,
+                  letterSpacing: 1,
+                }}
+              >
                 CompTrack
               </Typography>
             </Box>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2.5 }}>
-              <Button color="inherit" component={Link} to="/" sx={{ color: '#e0e0e0', '&:hover': { color: '#00e5ff', transform: 'scale(1.05)' }, transition: 'all 0.3s' }}>Home</Button>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/"
+                sx={{
+                  color: darkMode ? '#B0BEC5' : '#757575',
+                  '&:hover': { color: darkMode ? '#81C784' : '#4CAF50', transform: 'scale(1.05)' },
+                  transition: 'all 0.3s',
+                }}
+              >
+                Home
+              </Button>
               {isLoggedIn ? (
                 <>
-                  <Button color="inherit" component={Link} to="/dashboard" sx={{ color: '#e0e0e0', '&:hover': { color: '#00e5ff', transform: 'scale(1.05)' }, transition: 'all 0.3s' }}>Dashboard</Button>
-                  <Button color="inherit" onClick={() => { localStorage.clear(); navigate('/'); }} sx={{ color: '#e0e0e0', '&:hover': { color: '#ff6f61', transform: 'scale(1.05)' }, transition: 'all 0.3s' }}>Logout</Button>
+                  <Button
+                    color="inherit"
+                    component={Link}
+                    to="/dashboard"
+                    sx={{
+                      color: darkMode ? '#B0BEC5' : '#757575',
+                      '&:hover': { color: darkMode ? '#81C784' : '#4CAF50', transform: 'scale(1.05)' },
+                      transition: 'all 0.3s',
+                    }}
+                  >
+                    Dashboard
+                  </Button>
+                  <Button
+                    color="inherit"
+                    onClick={() => {
+                      localStorage.clear();
+                      navigate('/');
+                    }}
+                    sx={{
+                      color: darkMode ? '#B0BEC5' : '#757575',
+                      '&:hover': { color: darkMode ? '#FF9800' : '#FF9800', transform: 'scale(1.05)' },
+                      transition: 'all 0.3s',
+                    }}
+                  >
+                    Logout
+                  </Button>
                 </>
               ) : (
                 <>
-                  <Button color="inherit" component={Link} to="/login" sx={{ color: '#e0e0e0', '&:hover': { color: '#00e5ff', transform: 'scale(1.05)' }, transition: 'all 0.3s' }}>Login</Button>
-                  <Button color="inherit" component={Link} to="/about" sx={{ color: '#e0e0e0', '&:hover': { color: '#00e5ff', transform: 'scale(1.05)' }, transition: 'all 0.3s' }}>About Us</Button>
+                  <Button
+                    color="inherit"
+                    component={Link}
+                    to="/login"
+                    sx={{
+                      color: darkMode ? '#B0BEC5' : '#757575',
+                      '&:hover': { color: darkMode ? '#81C784' : '#4CAF50', transform: 'scale(1.05)' },
+                      transition: 'all 0.3s',
+                    }}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    color="inherit"
+                    component={Link}
+                    to="/about"
+                    sx={{
+                      color: darkMode ? '#B0BEC5' : '#757575',
+                      '&:hover': { color: darkMode ? '#81C784' : '#4CAF50', transform: 'scale(1.05)' },
+                      transition: 'all 0.3s',
+                    }}
+                  >
+                    About Us
+                  </Button>
                 </>
               )}
               <Tooltip>
-                <Select value={language} onChange={(e) => setLanguage(e.target.value)} sx={{ color: '#00e5ff', bgcolor: 'rgba(255,255,255,0.15)', borderRadius: 2, '& .MuiSvgIcon-root': { color: '#00e5ff' } }}>
-                  <MenuItem value="English"><Language sx={{ mr: 1 }} />English</MenuItem>
-                  <MenuItem value="Hindi"><Language sx={{ mr: 1 }} />हिन्दी</MenuItem>
-                  <MenuItem value="Nepali"><Language sx={{ mr: 1 }} />नेपाली</MenuItem>
-                  <MenuItem value="Maithili"><Language sx={{ mr: 1 }} />मैथिली</MenuItem>
+                <Select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  sx={{
+                    color: darkMode ? '#81C784' : '#4CAF50',
+                    bgcolor: 'rgba(255,255,255,0.15)',
+                    borderRadius: 2
+                  }}
+                >
+                  <MenuItem value="English">
+                   English
+                  </MenuItem>
+                  <MenuItem value="Hindi">
+                   हिन्दी
+                  </MenuItem>
+                  <MenuItem value="Nepali">
+                    नेपाली
+                  </MenuItem>
+                  <MenuItem value="Maithili">
+                    मैथिली
+                  </MenuItem>
                 </Select>
               </Tooltip>
               <Tooltip title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
-                <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} icon={<Brightness7 sx={{ color: '#fff' }} />} checkedIcon={<Brightness4 sx={{ color: '#fff' }} />} />
+                <Switch
+                  checked={darkMode}
+                  onChange={() => setDarkMode(!darkMode)}
+                  icon={<Brightness7 sx={{ color: '#fff' }} />}
+                  checkedIcon={<Brightness4 sx={{ color: '#fff' }} />}
+                />
               </Tooltip>
             </Box>
             <IconButton
@@ -292,114 +448,79 @@ const Home = () => {
           </Drawer>
         </AppBar>
 
-        <Box sx={{ position: 'relative', height: '100vh', mt: 12, overflow: 'hidden' }}>
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              zIndex: -1,
-              filter: 'brightness(0.6) contrast(1.1)',
-            }}
-          >
-            <source src={videoBackground} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          {videoError && (
-            <Box
+        <Box
+          sx={{
+            position: 'relative',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            bgcolor: darkMode ? '#0f2027' : '#e0f7fa', // Updated background
+            color: darkMode ? '#fff' : '#1a1a2e', // Updated text color
+            px: 2,
+          }}
+        >
+          <Container maxWidth="lg">
+            <Typography
+              variant="h1"
               sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                bgcolor: darkMode ? '#1a1a2e' : '#f0faff',
-                zIndex: -1,
+                fontWeight: 900,
+                fontSize: { xs: '2.5rem', sm: '3.5rem', md: '6rem' },
+                mb: 5,
+                textShadow: '0 6px 25px rgba(0, 0, 0, 0.8)',
+                letterSpacing: 2,
               }}
-            />
-          )}
-          <Box
-            sx={{
-              position: 'relative',
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              color: '#fff',
-              zIndex: 1,
-              px: 2, // Add padding for smaller screens
-            }}
-          >
-            <Slide direction="up" in={true} timeout={1500}>
-              <Container maxWidth="lg">
-                <Typography
-                  variant="h1"
-                  sx={{
-                    fontWeight: 900,
-                    fontSize: { xs: '2.5rem', sm: '3.5rem', md: '6rem' }, // Responsive font sizes
-                    mb: 5,
-                    textShadow: '0 6px 25px rgba(0, 229, 255, 0.8)',
-                    letterSpacing: 2,
-                  }}
-                >
-                  {translations[language].title}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    mb: 7,
-                    maxWidth: '1000px',
-                    mx: 'auto',
-                    fontWeight: 300,
-                    color: '#e0e0e0',
-                    letterSpacing: 1.5,
-                    lineHeight: 1.6,
-                    fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' }, // Responsive font sizes
-                  }}
-                >
-                  {translations[language].subtitle}
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    component={Link}
-                    to="/login"
-                    sx={{
-                      bgcolor: '#00e5ff',
-                      '&:hover': { bgcolor: '#00c4cc', transform: 'scale(1.15)' },
-                      px: { xs: 3, sm: 5 }, // Responsive padding
-                      py: { xs: 1.5, sm: 2 },
-                    }}
-                  >
-                    Get Started
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    component={Link}
-                    to="/about"
-                    sx={{
-                      color: '#fff',
-                      borderColor: '#fff',
-                      '&:hover': { borderColor: '#00e5ff', color: '#00e5ff', transform: 'scale(1.15)' },
-                      px: { xs: 3, sm: 5 }, // Responsive padding
-                      py: { xs: 1.5, sm: 2 },
-                    }}
-                  >
-                    Learn More
-                  </Button>
-                </Box>
-              </Container>
-            </Slide>
-          </Box>
+            >
+              {translations[language].title}
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 7,
+                maxWidth: '1000px',
+                mx: 'auto',
+                fontWeight: 300,
+                color: darkMode ? '#E0E0E0' : '#424242',
+                letterSpacing: 1.5,
+                lineHeight: 1.6,
+                fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' },
+              }}
+            >
+              {translations[language].subtitle}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Button
+                variant="contained"
+                size="large"
+                component={Link}
+                to="/login"
+                sx={{
+                  bgcolor: '#4CAF50',
+                  '&:hover': { bgcolor: '#388E3C', transform: 'scale(1.15)' },
+                  px: { xs: 3, sm: 5 },
+                  py: { xs: 1.5, sm: 2 },
+                }}
+              >
+                Get Started
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                component={Link}
+                to="/about"
+                sx={{
+                  color: darkMode ? '#fff' : '#4CAF50',
+                  borderColor: darkMode ? '#fff' : '#4CAF50',
+                  '&:hover': { borderColor: '#388E3C', color: '#388E3C', transform: 'scale(1.15)' },
+                  px: { xs: 3, sm: 5 },
+                  py: { xs: 1.5, sm: 2 },
+                }}
+              >
+                Learn More
+              </Button>
+            </Box>
+          </Container>
         </Box>
 
         <Container sx={{ py: { xs: 8, sm: 12, md: 15 } }} ref={trackComplaintRef}>
@@ -441,7 +562,7 @@ const Home = () => {
               InputProps={{
                 endAdornment: (
                   <Tooltip title="Enter your complaint ID">
-                    <Info sx={{ color: '#00e5ff' }} />
+                    <Info sx={{ color: '#4CAF50' }} />
                   </Tooltip>
                 ),
               }}
@@ -506,7 +627,22 @@ const Home = () => {
         </Container>
 
         <Container sx={{ py: 16 }}>
-          <Typography variant="h3" align="center" sx={{ fontWeight: 800, mb: 14, color: darkMode ? '#fff' : '#1a1a2e', textShadow: '0 4px 15px rgba(0,0,0,0.25)' }}>{translations[language].whyStandOut}</Typography>
+          <Typography
+            variant="h3"
+            align="center"
+            sx={{
+              fontWeight: 800,
+              mb: 14,
+              color: darkMode ? '#4CAF50' : '#1a1a2e', // Updated color
+              textShadow: '0 4px 15px rgba(0,0,0,0.25)', // Subtle shadow for text
+              transition: 'color 0.3s ease', // Smooth color transition
+              '&:hover': {
+                color: darkMode ? '#81C784' : '#388E3C', // Hover color
+              },
+            }}
+          >
+            {translations[language].whyStandOut}
+          </Typography>
           <Grid container spacing={7} justifyContent="center">
             {[
               { icon: <FileCopy />, title: 'Instant Filing', desc: 'Submit complaints with AI-guided forms in seconds.' },
@@ -523,18 +659,32 @@ const Home = () => {
                       bgcolor: darkMode ? '#3e3e5e' : '#fff',
                       borderRadius: 4,
                       boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                      transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
                       '&:hover': {
                         transform: 'scale(1.1)', // Slight zoom-in effect
-                        bgcolor: '#0000ab', // Change background color on hover
-                        color: '#fff', // Change text color on hover
-                        boxShadow: '0 15px 40px rgba(0, 229, 255, 0.5)', // Add a glowing shadow
+                        bgcolor: darkMode ? '#4CAF50' : '#E8F5E9', // Updated hover background color
+                        color: darkMode ? '#fff' : '#1a1a2e', // Updated hover text color
+                        boxShadow: '0 15px 40px rgba(76, 175, 80, 0.5)', // Green glow
                       },
                     }}
                   >
-                    {React.cloneElement(feature.icon, { sx: { fontSize: 80, color: darkMode ? '#00e5ff' : '#1a1a2e', mb: 4 } })}
-                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>{feature.title}</Typography>
-                    <Typography variant="body1" sx={{ lineHeight: 1.7 }}>{feature.desc}</Typography>
+                    {React.cloneElement(feature.icon, {
+                      sx: {
+                        fontSize: 80,
+                        color: darkMode ? '#81C784' : '#4CAF50', // Updated icon color
+                        mb: 4,
+                        transition: 'color 0.3s ease',
+                        '&:hover': {
+                          color: darkMode ? '#A5D6A7' : '#388E3C', // Hover icon color
+                        },
+                      },
+                    })}
+                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant="body1" sx={{ lineHeight: 1.7 }}>
+                      {feature.desc}
+                    </Typography>
                   </Card>
                 </Fade>
               </Grid>
@@ -544,7 +694,22 @@ const Home = () => {
 
         <Box sx={{ bgcolor: darkMode ? '#2e2e4e' : '#e6faff', py: 16 }}>
           <Container>
-            <Typography variant="h3" align="center" sx={{ fontWeight: 800, mb: 14, color: darkMode ? '#fff' : '#1a1a2e', textShadow: '0 4px 15px rgba(0,0,0,0.25)' }}>{translations[language].tools}</Typography>
+            <Typography
+              variant="h3"
+              align="center"
+              sx={{
+                fontWeight: 800,
+                mb: 14,
+                color: darkMode ? '#4CAF50' : '#1a1a2e', // Updated color
+                textShadow: '0 4px 15px rgba(0,0,0,0.25)', // Subtle shadow for text
+                transition: 'color 0.3s ease', // Smooth color transition
+                '&:hover': {
+                  color: darkMode ? '#81C784' : '#388E3C', // Hover color
+                },
+              }}
+            >
+              {translations[language].tools}
+            </Typography>
             <Grid container spacing={7} justifyContent="center">
               <Grid item xs={12} sm={4}>
                 <Card
@@ -554,12 +719,12 @@ const Home = () => {
                     bgcolor: darkMode ? '#3e3e5e' : '#fff',
                     borderRadius: 4,
                     boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
                     '&:hover': {
                       transform: 'scale(1.1)', // Slight zoom-in effect
-                      bgcolor: '#0000aa', // Change background color on hover
-                      color: '#fff', // Change text color on hover
-                      boxShadow: '0 15px 40px rgba(0, 229, 255, 0.5)', // Add a glowing shadow
+                      bgcolor: darkMode ? '#4CAF50' : '#E8F5E9', // Updated hover background color
+                      color: darkMode ? '#fff' : '#1a1a2e', // Updated hover text color
+                      boxShadow: '0 15px 40px rgba(76, 175, 80, 0.5)', // Green glow
                     },
                   }}
                 >
@@ -574,11 +739,11 @@ const Home = () => {
                     sx={{
                       py: 2,
                       px: 5,
-                      bgcolor: '#00e5ff',
+                      bgcolor: '#4CAF50',
                       color: '#fff',
                       '&:hover': {
-                        bgcolor: '#0000ac', // Change hover color
-                        boxShadow: '0 8px 20px rgba(0, 0, 172, 0.5)', // Add a glowing shadow
+                        bgcolor: '#388E3C', // Updated hover color
+                        boxShadow: '0 8px 20px rgba(56, 142, 60, 0.5)', // Green glow
                         transform: 'scale(1.1)', // Slight zoom-in effect
                       },
                     }}
@@ -588,15 +753,66 @@ const Home = () => {
                 </Card>
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Card sx={{ p: 6, textAlign: 'center', bgcolor: darkMode ? '#0000ac' : '#fff', '&:hover': { bgcolor: '#0000ac', color: '#fff', transform: 'scale(1.05)' } }}>
-                  <Typography variant="h6" sx={{ mb: 4, fontWeight: 700 }}>Multi-Language</Typography>
-                  <Typography variant="body1" sx={{ lineHeight: 1.7 }}>{language} Support Enabled</Typography>
+                <Card
+                  sx={{
+                    p: 6,
+                    textAlign: 'center',
+                    bgcolor: darkMode ? '#3e3e5e' : '#fff',
+                    borderRadius: 4,
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
+                    '&:hover': {
+                      transform: 'scale(1.1)', // Slight zoom-in effect
+                      bgcolor: darkMode ? '#4CAF50' : '#E8F5E9', // Updated hover background color
+                      color: darkMode ? '#fff' : '#1a1a2e', // Updated hover text color
+                      boxShadow: '0 15px 40px rgba(76, 175, 80, 0.5)', // Green glow
+                    },
+                  }}
+                >
+                  <Typography variant="h6" sx={{ mb: 4, fontWeight: 700 }}>
+                    Multi-Language
+                  </Typography>
+                  <Typography variant="body1" sx={{ lineHeight: 1.7 }}>
+                    {language} Support Enabled
+                  </Typography>
                 </Card>
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Card sx={{ p: 6, textAlign: 'center', bgcolor: darkMode ? '#3e3e5e' : '#fff', '&:hover': { bgcolor: '#0000ac', color: '#fff', transform: 'scale(1.05)' } }}>
-                  <Typography variant="h6" sx={{ mb: 4, fontWeight: 700 }}>Quick Links</Typography>
-                  <Button variant="outlined" component={Link} to="/login" sx={{ py: 1.5, px: 4, borderColor: '#00e5ff', color: '#00e5ff', '&:hover': { borderColor: '#00c4cc' } }}>
+                <Card
+                  sx={{
+                    p: 6,
+                    textAlign: 'center',
+                    bgcolor: darkMode ? '#3e3e5e' : '#fff',
+                    borderRadius: 4,
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
+                    '&:hover': {
+                      transform: 'scale(1.1)', // Slight zoom-in effect
+                      bgcolor: darkMode ? '#4CAF50' : '#E8F5E9', // Updated hover background color
+                      color: darkMode ? '#fff' : '#1a1a2e', // Updated hover text color
+                      boxShadow: '0 15px 40px rgba(76, 175, 80, 0.5)', // Green glow
+                    },
+                  }}
+                >
+                  <Typography variant="h6" sx={{ mb: 4, fontWeight: 700 }}>
+                    Quick Links
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    component={Link}
+                    to="/login"
+                    sx={{
+                      py: 1.5,
+                      px: 4,
+                      borderColor: '#4CAF50',
+                      color: '#4CAF50',
+                      '&:hover': {
+                        borderColor: '#388E3C',
+                        color: '#388E3C',
+                        backgroundColor: 'rgba(56, 142, 60, 0.1)', // Light green background on hover
+                      },
+                    }}
+                  >
                     Login
                   </Button>
                 </Card>
@@ -606,7 +822,7 @@ const Home = () => {
         </Box>
 
         <Dialog open={chatOpen} onClose={() => setChatOpen(false)} maxWidth="md" fullWidth>
-          <DialogTitle sx={{ bgcolor: '#00e5ff', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 3 }}>
+          <DialogTitle sx={{ bgcolor: '#4CAF50', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 3 }}>
             {translations[language].chat}
             <IconButton onClick={() => setChatOpen(false)} sx={{ color: '#fff' }}><Close /></IconButton>
           </DialogTitle>
@@ -614,18 +830,18 @@ const Home = () => {
             {chatHistory.map((msg, index) => (
               <Box key={index} sx={{ mb: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mb: 1 }}>
-                  <Typography sx={{ p: 2, bgcolor: '#00e5ff', color: '#fff', borderRadius: 3, maxWidth: '70%' }}>{msg.user}</Typography>
-                  <Avatar sx={{ ml: 2, bgcolor: '#00e5ff' }}>U</Avatar>
+                  <Typography sx={{ p: 2, bgcolor: '#4CAF50', color: '#fff', borderRadius: 3, maxWidth: '70%' }}>{msg.user}</Typography>
+                  <Avatar sx={{ ml: 2, bgcolor: '#4CAF50' }}>U</Avatar>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar sx={{ mr: 2, bgcolor: '#ff6f61' }}>AI</Avatar>
+                  <Avatar sx={{ mr: 2, bgcolor: '#FF9800' }}>AI</Avatar>
                   <Typography sx={{ p: 2, bgcolor: '#fff', borderRadius: 3, boxShadow: '0 4px 15px rgba(0,0,0,0.1)', maxWidth: '70%' }}>{msg.ai}</Typography>
                 </Box>
               </Box>
             ))}
             {chatLoading && (
               <Box sx={{ textAlign: 'center', py: 3 }}>
-                <CircularProgress size={35} sx={{ color: '#00e5ff' }} />
+                <CircularProgress size={35} sx={{ color: '#4CAF50' }} />
               </Box>
             )}
           </DialogContent>
@@ -652,7 +868,7 @@ const Home = () => {
                   <Typography variant="h5" sx={{ fontStyle: 'italic', mb: 4, color: darkMode ? '#e0e0e0' : '#424242', maxWidth: '900px', mx: 'auto', lineHeight: 1.6 }}>
                     "{testimonial.quote}"
                   </Typography>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#00e5ff' }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#4CAF50' }}>
                     — {testimonial.name}
                   </Typography>
                 </Box>
@@ -661,70 +877,19 @@ const Home = () => {
           </Container>
         </Box>
 
-        <Dialog open={openWelcome} onClose={() => setOpenWelcome(false)} maxWidth="sm" fullWidth>
-          <DialogTitle
-            sx={{
-              bgcolor: '#00cc00',
-              color: '#fff',
-              fontWeight: 700,
-              py: 3,
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              {translations[language].welcome}
-            </Typography>
-            <IconButton onClick={() => setOpenWelcome(false)} sx={{ color: '#fff' }}>
-              <Close />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent sx={{ bgcolor: '#e6faff', py: 5 }}>
-            <Typography sx={{ mt: 2, color: '#1a1a2e', fontSize: '1.2rem', lineHeight: 1.7 }}>
-              {translations[language].welcomeText}
-            </Typography>
-            <Box sx={{ mt: 5, textAlign: 'center' }}>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<PlayArrow />}
-                onClick={() => {
-                  setOpenWelcome(false);
-                  navigate(isLoggedIn ? '/dashboard' : '/login');
-                }}
-                sx={{ py: 2, px: 6, '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                Get Started
-              </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                startIcon={<TrackChanges />}
-                onClick={() => {
-                  setOpenWelcome(false); // Close the dialog if open
-                  trackComplaintRef.current?.scrollIntoView({ behavior: 'smooth' }); // Scroll to the section
-                }}
-                sx={{ py: 2, px: 6, ml: 2, '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                Track Complaints
-              </Button>
-            </Box>
-          </DialogContent>
-        </Dialog>
 
         <Box sx={{ bgcolor: darkMode ? '#2e2e4e' : '#1a1a2e', py: 12, textAlign: 'center', color: '#e0e0e0', boxShadow: '0 -6px 25px rgba(0,0,0,0.2)' }}>
           <Container>
             <Typography variant="body1" sx={{ mb: 5, fontWeight: 500, letterSpacing: 1 }}>© {new Date().getFullYear()} CompTrack. All Rights Reserved.</Typography>
             <Box sx={{ mb: 5 }}>
-              <IconButton href="#" sx={{ color: '#00e5ff', mx: 2, '&:hover': { color: '#00c4cc', transform: 'scale(1.2)' }, transition: 'all 0.3s' }}><Facebook /></IconButton>
-              <IconButton href="#" sx={{ color: '#00e5ff', mx: 2, '&:hover': { color: '#00c4cc', transform: 'scale(1.2)' }, transition: 'all 0.3s' }}><Twitter /></IconButton>
-              <IconButton href="#" sx={{ color: '#00e5ff', mx: 2, '&:hover': { color: '#00c4cc', transform: 'scale(1.2)' }, transition: 'all 0.3s' }}><LinkedIn /></IconButton>
+              <IconButton href="https://www.facebook.com/" target='_blank' sx={{ color: '#4CAF50', mx: 2, '&:hover': { color: '#00c4cc', transform: 'scale(1.2)' }, transition: 'all 0.3s' }}><Facebook /></IconButton>
+              <IconButton href="https://www.twitter.com/"target='_blank' sx={{ color: '#4CAF50', mx: 2, '&:hover': { color: '#00c4cc', transform: 'scale(1.2)' }, transition: 'all 0.3s' }}><Twitter /></IconButton>
+              <IconButton href="https://www.linkedin.com/"target='_blank' sx={{ color: '#4CAF50', mx: 2, '&:hover': { color: '#00c4cc', transform: 'scale(1.2)' }, transition: 'all 0.3s' }}><LinkedIn /></IconButton>
             </Box>
             <Typography variant="body2" sx={{ letterSpacing: 1 }}>
-              <Link href="#" style={{ color: '#00e5ff', textDecoration: 'none', mx: 2, '&:hover': { textDecoration: 'underline' } }}>Privacy</Link> |
-              <Link href="#" style={{ color: '#00e5ff', textDecoration: 'none', mx: 2, '&:hover': { textDecoration: 'underline' } }}>Terms</Link> |
-              <Link href="#" style={{ color: '#00e5ff', textDecoration: 'none', mx: 2, '&:hover': { textDecoration: 'underline' } }}>Contact</Link>
+              <Link href="#" style={{ color: '#4CAF50', textDecoration: 'none', mx: 2, '&:hover': { textDecoration: 'underline' } }}>Privacy</Link> |
+              <Link href="#" style={{ color: '#4CAF50', textDecoration: 'none', mx: 2, '&:hover': { textDecoration: 'underline' } }}>Terms</Link> |
+              <Link href="#" style={{ color: '#4CAF50', textDecoration: 'none', mx: 2, '&:hover': { textDecoration: 'underline' } }}>Contact</Link>
             </Typography>
           </Container>
         </Box>

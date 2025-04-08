@@ -8,8 +8,7 @@ import {
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Edit, Brightness4, Brightness7, Logout, Refresh, Delete, CheckCircle, Comment } from '@mui/icons-material';
-import videoBackground from '../assets/comptrack.mp4';
-import logo from '../assets/comptrackLogo.png';
+import logo from './assets/comptrackLogo.png';
 
 const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -226,12 +225,26 @@ const Dashboard = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ minHeight: '100vh', position: 'relative', overflowX: 'hidden', background: 'linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%)' }}>
-        <video autoPlay loop muted style={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.3 }}>
-          <source src={videoBackground} type="video/mp4" />
-        </video>
-
-        <Box sx={{ position: 'sticky', top: 0, bgcolor: 'rgba(27, 38, 59, 0.9)', zIndex: 10, py: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)' }}>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          position: 'relative',
+          overflowX: 'hidden',
+          background: darkMode
+            ? 'linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%)' // Modern gradient for dark mode
+            : 'linear-gradient(135deg, #e0f7fa 0%, #ffffff 100%)', // Modern gradient for light mode
+        }}
+      >
+        <Box
+          sx={{
+            position: 'sticky',
+            top: 0,
+            bgcolor: 'rgba(27, 38, 59, 0.9)',
+            zIndex: 10,
+            py: 2,
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+          }}
+        >
           <Container>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -241,11 +254,27 @@ const Dashboard = () => {
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Button variant="outlined" startIcon={<Edit />} sx={{ color: '#00d4ff', borderColor: '#00d4ff', mr: 2 }} onClick={() => setProfileDialog(true)}>
+                <Button
+                  variant="outlined"
+                  startIcon={<Edit />}
+                  sx={{ color: '#00d4ff', borderColor: '#00d4ff', mr: 2 }}
+                  onClick={() => setProfileDialog(true)}
+                >
                   Profile
                 </Button>
-                <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} icon={<Brightness7 />} checkedIcon={<Brightness4 />} sx={{ color: '#00d4ff' }} />
-                <Button variant="contained" startIcon={<Logout />} sx={{ bgcolor: '#ff4081', ml: 2, '&:hover': { bgcolor: '#f50057' } }} onClick={() => setLogoutDialogOpen(true)}>
+                <Switch
+                  checked={darkMode}
+                  onChange={() => setDarkMode(!darkMode)}
+                  icon={<Brightness7 />}
+                  checkedIcon={<Brightness4 />}
+                  sx={{ color: '#00d4ff' }}
+                />
+                <Button
+                  variant="contained"
+                  startIcon={<Logout />}
+                  sx={{ bgcolor: '#ff4081', ml: 2, '&:hover': { bgcolor: '#f50057' } }}
+                  onClick={() => setLogoutDialogOpen(true)}
+                >
                   Logout
                 </Button>
               </Box>
@@ -256,11 +285,22 @@ const Dashboard = () => {
         <Container sx={{ position: 'relative', zIndex: 1, py: 8 }}>
           <Slide direction="down" in={true} timeout={1000}>
             <Box sx={{ textAlign: 'center', mb: 6 }}>
-              <Typography variant="h3" sx={{ color: '#fff', fontWeight: 700, textShadow: '0 2px 10px rgba(0, 212, 255, 0.5)' }}>
+              <Typography
+                variant="h3"
+                sx={{
+                  color: '#fff',
+                  fontWeight: 700,
+                  textShadow: '0 2px 10px rgba(0, 212, 255, 0.5)',
+                }}
+              >
                 Welcome, {authData.user.username || 'User'}! ✨
               </Typography>
               <Typography sx={{ color: '#b0bec5', fontSize: '1.2rem', mt: 1 }}>
-                {authData.user.role === 'admin' ? 'Oversee and resolve all issues.' : authData.user.role === 'support' ? 'Assist and escalate complaints.' : 'File and track your concerns.'}
+                {authData.user.role === 'admin'
+                  ? 'Oversee and resolve all issues.'
+                  : authData.user.role === 'support'
+                  ? 'Assist and escalate complaints.'
+                  : 'File and track your concerns.'}
               </Typography>
             </Box>
           </Slide>
@@ -499,8 +539,19 @@ const Dashboard = () => {
           </DialogActions>
         </Dialog>
 
-        <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-          <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>{snackbar.message}</Alert>
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
         </Snackbar>
       </Box>
     </ThemeProvider>

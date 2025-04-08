@@ -5,7 +5,6 @@ import {
   TextField, Button, Typography, Box, CircularProgress, Snackbar, Alert, Fade,
 } from '@mui/material';
 import { styled } from '@mui/system';
-import videoBackground from '../assets/comptrack.mp4'; 
 
 
 const PageContainer = styled(Box)({
@@ -153,9 +152,6 @@ const Login = () => {
 
   return (
     <PageContainer>
-      <video autoPlay loop muted style={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.3 }}>
-        <source src={videoBackground} type="video/mp4" />
-      </video>
       <Fade in={true} timeout={500}>
         <FormCard sx={{ zIndex: 1 }}>
           <Typography variant="h4" sx={{ color: '#0d1b2a', fontWeight: 'bold', mb: 4, textShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>

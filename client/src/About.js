@@ -5,7 +5,7 @@ import {
   TextField, IconButton, Fade
 } from '@mui/material';
 import { Email, Phone, Send, Facebook, Twitter, LinkedIn } from '@mui/icons-material';
-import backgroundImage from './assets/comptrack.png'; // Same modern background as Home.js
+import backgroundImage from "./components/assets/comptrack.png"; // Same modern background as Home.js
 
 const About = () => {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
