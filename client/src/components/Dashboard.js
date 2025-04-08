@@ -246,39 +246,50 @@ const Dashboard = () => {
           }}
         >
           <Container>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <img src={logo} alt="CompTrack Logo" style={{ height: 40, marginRight: 10 }} />
-                <Typography variant="h6" sx={{ color: '#00d4ff', fontWeight: 600 }}>
-                  Dashboard ({authData.user.role.charAt(0).toUpperCase() + authData.user.role.slice(1)})
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Button
-                  variant="outlined"
-                  startIcon={<Edit />}
-                  sx={{ color: '#00d4ff', borderColor: '#00d4ff', mr: 2 }}
-                  onClick={() => setProfileDialog(true)}
-                >
-                  Profile
-                </Button>
-                <Switch
-                  checked={darkMode}
-                  onChange={() => setDarkMode(!darkMode)}
-                  icon={<Brightness7 />}
-                  checkedIcon={<Brightness4 />}
-                  sx={{ color: '#00d4ff' }}
-                />
-                <Button
-                  variant="contained"
-                  startIcon={<Logout />}
-                  sx={{ bgcolor: '#ff4081', ml: 2, '&:hover': { bgcolor: '#f50057' } }}
-                  onClick={() => setLogoutDialogOpen(true)}
-                >
-                  Logout
-                </Button>
-              </Box>
-            </Box>
+            <Grid container alignItems="center" justifyContent="space-between">
+              {/* Logo and Title */}
+              <Grid item xs={12} sm={6} sx={{ textAlign: { xs: 'center', sm: 'left' }, mb: { xs: 2, sm: 0 } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', sm: 'flex-start' } }}>
+                  <img src={logo} alt="CompTrack Logo" style={{ height: 40, marginRight: 10 }} />
+                  <Typography variant="h6" sx={{ color: '#00d4ff', fontWeight: 600 }}>
+                    Dashboard ({authData.user.role.charAt(0).toUpperCase() + authData.user.role.slice(1)})
+                  </Typography>
+                </Box>
+              </Grid>
+
+              {/* Buttons */}
+              <Grid item xs={12} sm={6} sx={{ textAlign: { xs: 'center', sm: 'right' } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', sm: 'flex-end' }, flexWrap: 'wrap', gap: 1 }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Edit />}
+                    sx={{ color: '#00d4ff', borderColor: '#00d4ff' }}
+                    onClick={() => setProfileDialog(true)}
+                  >
+                    Profile
+                  </Button>
+                  <Switch
+                    checked={darkMode}
+                    onChange={() => setDarkMode(!darkMode)}
+                    icon={<Brightness7 />}
+                    checkedIcon={<Brightness4 />}
+                    sx={{ color: '#00d4ff' }}
+                  />
+                  <Button
+                    variant="contained"
+                    startIcon={<Logout />}
+                    sx={{
+                      bgcolor: '#ff4081',
+                      '&:hover': { bgcolor: '#f50057' },
+                      flex: { xs: '1 1 100%', sm: 'none' }, // Full width on mobile
+                    }}
+                    onClick={() => setLogoutDialogOpen(true)}
+                  >
+                    Logout
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
           </Container>
         </Box>
 
@@ -414,19 +425,19 @@ const Dashboard = () => {
                           ))}
                         </Box>
                       )}
-                      <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+                      <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                         {authData.user.role === 'admin' && complaint.status !== 'Resolved' && (
-                          <Button variant="contained" color="success" startIcon={<CheckCircle />} onClick={() => handleResolve(complaint._id)}>
+                          <Button variant="contained" color="success" startIcon={<CheckCircle />} onClick={() => handleResolve(complaint._id)} sx={{ flex: '1 1 auto' }}>
                             Resolve
                           </Button>
                         )}
                         {authData.user.role === 'admin' && (
-                          <Button variant="outlined" color="error" startIcon={<Delete />} onClick={() => handleDelete(complaint._id)}>
+                          <Button variant="outlined" color="error" startIcon={<Delete />} onClick={() => handleDelete(complaint._id)} sx={{ flex: '1 1 auto' }}>
                             Delete
                           </Button>
                         )}
                         {authData.user.role === 'support' && !complaint.assignedTo && (
-                          <Button variant="contained" color="secondary" onClick={() => handleAssign(complaint._id)}>
+                          <Button variant="contained" color="secondary" onClick={() => handleAssign(complaint._id)} sx={{ flex: '1 1 auto' }}>
                             Assign to Admin
                           </Button>
                         )}
@@ -436,6 +447,7 @@ const Dashboard = () => {
                             color="primary"
                             startIcon={<Comment />}
                             onClick={() => setCommentDialog({ open: true, complaintId: complaint._id, comment: '' })}
+                            sx={{ flex: '1 1 auto' }}
                           >
                             Comment
                           </Button>
