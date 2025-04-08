@@ -10,7 +10,7 @@ const ComplaintList = ({ userId }) => {
     const fetchComplaints = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`http://localhost:5000/api/complaints/${userId}`, {
+        const res = await axios.get(`https://comptrack.onrender.com/api/complaints/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

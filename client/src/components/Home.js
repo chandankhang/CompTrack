@@ -242,7 +242,7 @@ const Home = () => {
     }
     setChatLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/chat', { message: chatMessage });
+      const response = await axios.post('https://comptrack.onrender.com/api/chat', { message: chatMessage });
       const newMessage = { user: chatMessage, ai: response.data.reply || 'How can I assist you today?' };
       setChatHistory([...chatHistory, newMessage]);
     } catch (error) {
@@ -260,7 +260,7 @@ const Home = () => {
     }
     setChatLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/complaints/track/${complaintId}`);
+      const res = await axios.get(`https://comptrack.onrender.com/api/complaints/track/${complaintId}`);
       setComplaintStatus(res.data);
       setSnackbar({ open: true, message: 'Complaint status retrieved successfully!', severity: 'success' });
     } catch (error) {

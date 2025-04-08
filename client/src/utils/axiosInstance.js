@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/api', // Base URL for your backend
+  baseURL: 'https://comptrack.onrender.com/api', // Base URL for your backend
 });
 
 // Add a request interceptor to include the token

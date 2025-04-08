@@ -76,7 +76,7 @@ const Login = () => {
     }
     setLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/auth/send-otp', { email });
+      await axios.post('https://comptrack.onrender.com/api/auth/send-otp', { email });
       setOtpSent(true);
       setSuccess('OTP generated! Check server terminal or use 123456 for testing.');
     } catch (err) {
@@ -102,7 +102,7 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', { username, email, password, otp });
+      const res = await axios.post('https://comptrack.onrender.com/api/auth/register', { username, email, password, otp });
       localStorage.setItem('user', JSON.stringify(res.data.user));
       localStorage.setItem('token', res.data.token);
       setSuccess('Registered successfully! Redirecting...');
@@ -121,7 +121,7 @@ const Login = () => {
     }
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const res = await axios.post('https://comptrack.onrender.com/api/auth/login', { email, password });
       localStorage.setItem('user', JSON.stringify(res.data.user));
       localStorage.setItem('token', res.data.token);
       setSuccess('Logged in successfully! Redirecting...');
@@ -140,7 +140,7 @@ const Login = () => {
     }
     setLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/auth/send-otp', { email });
+      await axios.post('https://comptrack.onrender.com/api/auth/send-otp', { email });
       setSuccess('Reset OTP generated! Check server terminal or use 123456.');
       setTimeout(() => resetForm(), 2000);
     } catch (err) {

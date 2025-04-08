@@ -49,7 +49,7 @@ const Dashboard = () => {
   const fetchComplaints = useCallback(async (userId, token, role) => {
     try {
       const endpoint = role === 'user' ? `/api/complaints/${userId}` : '/api/complaints/all';
-      const res = await axios.get(`http://localhost:5000${endpoint}`, {
+      const res = await axios.get(`https://comptrack.onrender.com${endpoint}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComplaints(res.data);
@@ -91,7 +91,7 @@ const Dashboard = () => {
       formData.append('location', location);
       if (image) formData.append('image', image);
 
-      const res = await axios.post('http://localhost:5000/api/complaints', formData, {
+      const res = await axios.post('https://comptrack.onrender.com/api/complaints', formData, {
         headers: {
           Authorization: `Bearer ${authData.token}`,
           'Content-Type': 'multipart/form-data',
@@ -112,7 +112,7 @@ const Dashboard = () => {
 
   const handleResolve = async (id) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/complaints/${id}/resolve`, {}, {
+      const res = await axios.put(`https://comptrack.onrender.com/api/complaints/${id}/resolve`, {}, {
         headers: { Authorization: `Bearer ${authData.token}` },
       });
       showMessage(res.data.message, 'success');
@@ -124,7 +124,7 @@ const Dashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:5000/api/complaints/${id}`, {
+      const res = await axios.delete(`https://comptrack.onrender.com/api/complaints/${id}`, {
         headers: { Authorization: `Bearer ${authData.token}` },
       });
       showMessage(res.data.message, 'success');
@@ -136,7 +136,7 @@ const Dashboard = () => {
 
   const handleAssign = async (id) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/complaints/${id}/assign`, {}, {
+      const res = await axios.put(`https://comptrack.onrender.com/api/complaints/${id}/assign`, {}, {
         headers: { Authorization: `Bearer ${authData.token}` },
       });
       showMessage(res.data.message, 'success');
@@ -149,7 +149,7 @@ const Dashboard = () => {
   const handleComment = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/complaints/${commentDialog.complaintId}/comment`,
+        `https://comptrack.onrender.com/api/complaints/${commentDialog.complaintId}/comment`,
         { comment: commentDialog.comment },
         { headers: { Authorization: `Bearer ${authData.token}` } }
       );
@@ -165,7 +165,7 @@ const Dashboard = () => {
     if (!authData.user || !authData.token) return;
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/users/${authData.user.userId}`,
+        `https://comptrack.onrender.com/api/users/${authData.user.userId}`,
         editProfile,
         { headers: { Authorization: `Bearer ${authData.token}` } }
       );
@@ -182,7 +182,7 @@ const Dashboard = () => {
   const handleDeleteAccount = async () => {
     if (!authData.user || !authData.token) return;
     try {
-      await axios.delete(`http://localhost:5000/api/users/${authData.user.userId}`, {
+      await axios.delete(`https://comptrack.onrender.com/api/users/${authData.user.userId}`, {
         headers: { Authorization: `Bearer ${authData.token}` },
       });
       localStorage.removeItem('user');
