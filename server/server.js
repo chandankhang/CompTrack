@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import User from './models/User.js';
+import User from './models/user.js';
 import Complaint from './models/complaint.js';
 import authMiddleware from './middleware/authMiddleware.js';
 import { rateLimit } from 'express-rate-limit';
