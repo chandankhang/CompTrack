@@ -26,7 +26,7 @@ const app = express();
 // Middleware setup
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: 'https://comptrack.onrender.com', credentials: true }));
 app.use(helmet()); // Security headers
 app.use(morgan('dev')); // Request logging
 

@@ -21,7 +21,7 @@ router.get('/', authMiddleware, async (req, res) => {
 // Protected route: Create a complaint
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const complaint = new Complaint({ ...req.body, userId: req.user.id });
+    const complaint = new complaint({ ...req.body, userId: req.user.id });
     await complaint.save();
     res.status(201).json(complaint);
   } catch (error) {
@@ -35,7 +35,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    const complaint = await Complaint.findByIdAndUpdate(
+    const complaint = await complaint.findByIdAndUpdate(
       id,
       { status },
       { new: true }
