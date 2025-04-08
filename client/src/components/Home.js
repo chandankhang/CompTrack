@@ -290,7 +290,7 @@ const Home = () => {
         }}
       >
         <AppBar
-          position = "fixed"
+          position="fixed"
           sx={{
             bgcolor: darkMode ? 'rgba(15, 32, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)', // Transparent app bar
             boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
@@ -298,6 +298,7 @@ const Home = () => {
           }}
         >
           <Toolbar sx={{ justifyContent: 'space-between', py: 1.5 }}>
+            {/* Logo and Title */}
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <img src={logo} alt="CompTrack Logo" style={{ height: 55, marginRight: 15 }} />
               <Typography
@@ -314,6 +315,8 @@ const Home = () => {
                 CompTrack
               </Typography>
             </Box>
+
+            {/* Desktop Buttons */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2.5 }}>
               <Button
                 color="inherit"
@@ -391,21 +394,13 @@ const Home = () => {
                   sx={{
                     color: darkMode ? '#81C784' : '#4CAF50',
                     bgcolor: 'rgba(255,255,255,0.15)',
-                    borderRadius: 2
+                    borderRadius: 2,
                   }}
                 >
-                  <MenuItem value="English">
-                   English
-                  </MenuItem>
-                  <MenuItem value="Hindi">
-                   हिन्दी
-                  </MenuItem>
-                  <MenuItem value="Nepali">
-                    नेपाली
-                  </MenuItem>
-                  <MenuItem value="Maithili">
-                    मैथिली
-                  </MenuItem>
+                  <MenuItem value="English">English</MenuItem>
+                  <MenuItem value="Hindi">हिन्दी</MenuItem>
+                  <MenuItem value="Nepali">नेपाली</MenuItem>
+                  <MenuItem value="Maithili">मैथिली</MenuItem>
                 </Select>
               </Tooltip>
               <Tooltip title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
@@ -417,6 +412,8 @@ const Home = () => {
                 />
               </Tooltip>
             </Box>
+
+            {/* Mobile Menu Icon */}
             <IconButton
               edge="start"
               color="inherit"
@@ -427,21 +424,70 @@ const Home = () => {
               <MenuIcon />
             </IconButton>
           </Toolbar>
+
+          {/* Mobile Drawer */}
           <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
-            <Box sx={{ width: 250 }}>
-              <IconButton onClick={toggleDrawer} sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
+            <Box sx={{ width: 250, p: 2 }}>
+              <IconButton onClick={toggleDrawer} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Close />
               </IconButton>
-              <Divider />
+              <Divider sx={{ my: 2 }} />
               <List>
                 <ListItem button component={Link} to="/" onClick={toggleDrawer}>
                   <ListItemText primary="Home" />
                 </ListItem>
-                <ListItem button component={Link} to="/login" onClick={toggleDrawer}>
-                  <ListItemText primary="Login" />
+                {isLoggedIn ? (
+                  <>
+                    <ListItem button component={Link} to="/dashboard" onClick={toggleDrawer}>
+                      <ListItemText primary="Dashboard" />
+                    </ListItem>
+                    <ListItem
+                      button
+                      onClick={() => {
+                        localStorage.clear();
+                        navigate('/');
+                        toggleDrawer();
+                      }}
+                    >
+                      <ListItemText primary="Logout" />
+                    </ListItem>
+                  </>
+                ) : (
+                  <>
+                    <ListItem button component={Link} to="/login" onClick={toggleDrawer}>
+                      <ListItemText primary="Login" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/about" onClick={toggleDrawer}>
+                      <ListItemText primary="About Us" />
+                    </ListItem>
+                  </>
+                )}
+                <Divider sx={{ my: 2 }} />
+                <ListItem>
+                  <Select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    fullWidth
+                    sx={{
+                      color: darkMode ? '#81C784' : '#4CAF50',
+                      bgcolor: 'rgba(255,255,255,0.15)',
+                      borderRadius: 2,
+                    }}
+                  >
+                    <MenuItem value="English">English</MenuItem>
+                    <MenuItem value="Hindi">हिन्दी</MenuItem>
+                    <MenuItem value="Nepali">नेपाली</MenuItem>
+                    <MenuItem value="Maithili">मैथिली</MenuItem>
+                  </Select>
                 </ListItem>
-                <ListItem button component={Link} to="/about" onClick={toggleDrawer}>
-                  <ListItemText primary="About Us" />
+                <ListItem>
+                  <Switch
+                    checked={darkMode}
+                    onChange={() => setDarkMode(!darkMode)}
+                    icon={<Brightness7 />}
+                    checkedIcon={<Brightness4 />}
+                  />
+                  <Typography sx={{ ml: 1 }}>{darkMode ? 'Dark Mode' : 'Light Mode'}</Typography>
                 </ListItem>
               </List>
             </Box>
